@@ -19,6 +19,6 @@
     Before run this program, please make sure that the database is closed.
     Then run the Demo.java, and we can find our ontology file is stored in neo4j as a graph.
 
-###Example
+### Example
     The picture below shows the part of pizza.owl from stanford.
     Sincerely welcome you to pull requests.     
