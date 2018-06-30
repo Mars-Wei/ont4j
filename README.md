@@ -20,7 +20,7 @@
     Then run the Demo.java, and we can find our ontology file is stored in neo4j as a graph.
 
 ### Example
-    The picture below shows the part of pizza.owl from stanford.
+    The picture below shows the part of the pizza.owl from stanford university as a graph.
 
 ![image](https://github.com/ylins/ont4j/blob/master/src/main/resources/img/graph.png)
 
