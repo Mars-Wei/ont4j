@@ -16,10 +16,9 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasoner;
  */
 public class Ontology {
 
-    private static String path = PathEnum.ONT_PATH.getPath();
     private static OWLOntology ontology;
 
-    public static OWLOntology load() throws OWLOntologyCreationException {
+    public static OWLOntology load(String path) throws OWLOntologyCreationException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         IRI iri = IRI.create("file:" + path);
         ontology = manager.loadOntologyFromOntologyDocument(iri);

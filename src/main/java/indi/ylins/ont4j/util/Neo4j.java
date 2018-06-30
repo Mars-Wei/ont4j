@@ -17,10 +17,9 @@ import java.util.Map;
  */
 public class Neo4j {
 
-    private static File dbDir = new File(PathEnum.DB_DIR.getPath());
     private static GraphDatabaseService db;
 
-    public static GraphDatabaseService connect() {
+    public static GraphDatabaseService connect(File dbDir) {
         db = new GraphDatabaseFactory().newEmbeddedDatabase(dbDir);
         registerShutdownHook(db);
         return db;

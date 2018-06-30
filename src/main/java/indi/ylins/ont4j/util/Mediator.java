@@ -9,22 +9,36 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 /**
  * @author Yue Lin
  * @since 2018-06-30
  */
-public class Ont4jMediator {
+public class Mediator {
 
+    private static String owlPath;
+    private static File dbDir;
     private static OWLOntology ontology;
     private static OWLReasoner reasoner;
     private static GraphDatabaseService graphDb;
 
+    public static void getEnv(String propertyFile) throws IOException {
+        InputStream in = Handler.class.getClassLoader().getResourceAsStream(propertyFile);
+        Properties properties = new Properties();
+        properties.load(in);
+        owlPath = properties.getProperty("ontPath");
+        dbDir = new File(properties.getProperty("dbDir"));
+    }
+
     public static void init() throws OWLOntologyCreationException {
-        ontology = Ontology.load();
+        ontology = Ontology.load(owlPath);
         reasoner =Ontology.createReasoner();
-        graphDb = Neo4j.connect();
+        graphDb = Neo4j.connect(dbDir);
         Neo4j.setConstraint();
     }
 
@@ -32,8 +46,8 @@ public class Ont4jMediator {
         try (Transaction tx = graphDb.beginTx()) {
             Node thingNode = Neo4j.getOrCreateNodeWithUniqueFactory("origin", "owl:Thing");
             Stream<OWLClass> classes = ontology.classesInSignature(Imports.INCLUDED);
-            Stream<Ont4jHandler.Relation> classNodes = classes.map(c -> Ont4jHandler.handleRelation(reasoner, c, thingNode));
-            classNodes.forEach(n -> Ont4jHandler.handleIndividual(ontology, reasoner, n.getClassName(), n.getClassNode()));
+            Stream<ClassPair> classNodes = classes.map(c -> Handler.handleRelation(reasoner, c, thingNode));
+            classNodes.forEach(n -> Handler.handleIndividual(ontology, reasoner, n.getClassName(), n.getClassNode()));
             tx.success();
         }
     }

@@ -1,7 +1,9 @@
 package indi.ylins.ont4j;
 
-import indi.ylins.ont4j.util.Ont4jMediator;
+import indi.ylins.ont4j.util.Mediator;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+
+import java.io.IOException;
 
 /**
  * @author Yue Lin
@@ -9,9 +11,10 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
  */
 public class Demo {
 
-    public static void main(String[] args) throws OWLOntologyCreationException {
-        Ont4jMediator.init();
-        Ont4jMediator.transfer();
-        Ont4jMediator.close();
+    public static void main(String[] args) throws OWLOntologyCreationException, IOException {
+        Mediator.getEnv("application.properties");
+        Mediator.init();
+        Mediator.transfer();
+        Mediator.close();
     }
 }
