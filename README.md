@@ -21,4 +21,7 @@
 
 ### Example
     The picture below shows the part of pizza.owl from stanford.
+
+![image](https://github.com/ylins/ont4j/blob/master/src/main/resources/img/graph.png)
+
     Sincerely welcome you to pull requests.     
