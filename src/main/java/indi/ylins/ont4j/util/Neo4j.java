@@ -17,39 +17,44 @@ import java.util.Map;
  */
 public class Neo4j {
 
-    private GraphDatabaseService db;
+    private static File dbDir = new File(PathEnum.DB_DIR.getPath());
+    private static GraphDatabaseService db;
 
-    public void connect(File dbDir) {
-        this.db = new GraphDatabaseFactory().newEmbeddedDatabase(dbDir);
-        registerShutdownHook(this.db);
+    public static GraphDatabaseService connect() {
+        db = new GraphDatabaseFactory().newEmbeddedDatabase(dbDir);
+        registerShutdownHook(db);
+        return db;
     }
 
-    public void shutdown() {
-        this.db.shutdown();
+    public static void setConstraint() {
+        try (Transaction tx = db.beginTx()) {
+            if (db.schema().getConstraints(Label.label("origin")) == null) {
+                db.schema().constraintFor(Label.label("origin")).assertPropertyIsUnique("name").create();
+                tx.success();
+            }
+        }
     }
 
-    public Node getOrCreateNodeWithUniqueFactory(String concept) {
+    public static Node getOrCreateNodeWithUniqueFactory(String nodeKey, String nodeName) {
         Node result;
         ResourceIterator<Node> resultIterator;
-        try (Transaction tx = this.db.beginTx()) {
-            String queryString = "MERGE (n:Concept {name: $name}) RETURN n";
+        try (Transaction tx = db.beginTx()) {
+            String queryString = "MERGE (n:" + nodeKey + " {name: $name}) RETURN n";
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("name", concept);
-            resultIterator = this.db.execute(queryString, parameters).columnAs( "n" );
+            parameters.put("name", nodeName);
+            resultIterator = db.execute(queryString, parameters).columnAs( "n" );
             result = resultIterator.next();
             tx.success();
             return result;
         }
     }
 
-    private void setConstraint() {
-        try (Transaction tx = this.db.beginTx()) {
-            this.db.schema().constraintFor(Label.label( "concept" )).assertPropertyIsUnique( "name" ).create();
-            tx.success();
-        }
-    }
-
     private static void registerShutdownHook(final GraphDatabaseService graphDb) {
         Runtime.getRuntime().addShutdownHook(new Thread(graphDb::shutdown));
     }
+
+    public static void shutdown() {
+        db.shutdown();
+    }
+
 }
