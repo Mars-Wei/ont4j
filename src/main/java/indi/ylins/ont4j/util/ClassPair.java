@@ -11,6 +11,7 @@ public class ClassPair {
 
     private OWLClass className;
     private Node classNode;
+
     public ClassPair(OWLClass className, Node classNode) {
         this.className = className;
         this.classNode = classNode;

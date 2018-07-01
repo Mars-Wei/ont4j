@@ -37,7 +37,7 @@ public class Mediator {
 
     public static void init() throws OWLOntologyCreationException {
         ontology = Ontology.load(owlPath);
-        reasoner =Ontology.createReasoner();
+        reasoner = Ontology.createReasoner();
         graphDb = Neo4j.connect(dbDir);
         Neo4j.setConstraint();
     }
@@ -46,8 +46,8 @@ public class Mediator {
         try (Transaction tx = graphDb.beginTx()) {
             Node thingNode = Neo4j.getOrCreateNodeWithUniqueFactory("origin", "owl:Thing");
             Stream<OWLClass> classes = ontology.classesInSignature(Imports.INCLUDED);
-            Stream<ClassPair> classNodes = classes.map(c -> Handler.handleRelation(reasoner, c, thingNode));
-            classNodes.forEach(n -> Handler.handleIndividual(ontology, reasoner, n.getClassName(), n.getClassNode()));
+            Stream<ClassPair> classPairs = classes.map(c -> Handler.handleRelation(reasoner, c, thingNode));
+            classPairs.forEach(p -> Handler.handleIndividual(ontology, reasoner, p.getClassName(), p.getClassNode()));
             tx.success();
         }
     }

@@ -2,10 +2,9 @@
 
 ![Language](https://img.shields.io/badge/JAVA-%3E%3D1.8-red.svg)
 ![license](https://img.shields.io/badge/License-MIT-blue.svg)
-![Progress](https://img.shields.io/badge/Version-Release.v1-brightgreen.svg)
+![Progress](https://img.shields.io/badge/Version-Release.01-brightgreen.svg)
 
     A tool for importing Ontology into Neo4j.
-    
     Any type of Ontology file will be allowed, like OWL, RDF, etc. 
 ### Usage
     This project uses embedded way to access the graph database. 
@@ -20,7 +19,7 @@
     Then run the Demo.java, and we can find our ontology file is stored in neo4j as a graph.
 
 ### Example
-    The picture below shows the part of the pizza.owl from stanford university as a graph.
+    The picture below shows the part of the pizza.owl from Stanford university as a graph in neo4j.
 
 ![image](https://github.com/ylins/ont4j/blob/master/src/main/resources/img/graph.png)
 

@@ -22,8 +22,10 @@ public class Handler {
     public static ClassPair handleRelation(OWLReasoner reasoner, OWLClass owlClass, Node thingNode) {
         String classString = getObjectName(owlClass);
         Node classNode;
-        if (classString.equals("owl:Thing"))
+        if (classString.equals("owl:Thing")) {
             classNode = Neo4j.getOrCreateNodeWithUniqueFactory("origin", classString);
+            return new ClassPair(owlClass, classNode);
+        }
         else
             classNode = Neo4j.getOrCreateNodeWithUniqueFactory("concept", classString);
         NodeSet<OWLClass> superClasses = reasoner.getSuperClasses(owlClass, true);
@@ -34,7 +36,6 @@ public class Handler {
                 OWLClass parent = parentOWLNode.getRepresentativeElement();
                 String parentString = getObjectName(parent);
                 if (parentString.equals("owl:Thing"))
-                    if (!classString.equals("owl:Thing"))
                         classNode.createRelationshipTo(thingNode, RelationshipType.withName("isA"));
                 else {
                     Node parentNode = Neo4j.getOrCreateNodeWithUniqueFactory("concept", parentString);
@@ -75,8 +76,8 @@ public class Handler {
         }
     }
 
-    private static String getObjectName(Object owlClass) {
-        String objectName = owlClass.toString();
+    private static String getObjectName(Object o) {
+        String objectName = o.toString();
         if (objectName.contains("#"))
             objectName = objectName.substring(objectName.indexOf("#") + 1, objectName.lastIndexOf(">"));
         return objectName;
