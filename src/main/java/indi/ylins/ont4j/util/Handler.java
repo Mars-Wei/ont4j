@@ -22,10 +22,8 @@ public class Handler {
     public static ClassPair handleRelation(OWLReasoner reasoner, OWLClass owlClass, Node thingNode) {
         String classString = getObjectName(owlClass);
         Node classNode;
-        if (classString.equals("owl:Thing")) {
-            classNode = Neo4j.getOrCreateNodeWithUniqueFactory("origin", classString);
-            return new ClassPair(owlClass, classNode);
-        }
+        if (classString.equals("owl:Thing"))
+            return new ClassPair(owlClass, thingNode);
         else
             classNode = Neo4j.getOrCreateNodeWithUniqueFactory("concept", classString);
         NodeSet<OWLClass> superClasses = reasoner.getSuperClasses(owlClass, true);
