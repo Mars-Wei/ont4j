@@ -28,7 +28,7 @@ public class Mediator {
     private static GraphDatabaseService graphDb;
 
     public static void getEnv(String propertyFile) throws IOException {
-        InputStream in = Handler.class.getClassLoader().getResourceAsStream(propertyFile);
+        InputStream in = Mediator.class.getClassLoader().getResourceAsStream(propertyFile);
         Properties properties = new Properties();
         properties.load(in);
         owlPath = properties.getProperty("ontPath");

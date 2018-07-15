@@ -48,12 +48,12 @@ public class Neo4j {
         }
     }
 
-    private static void registerShutdownHook(final GraphDatabaseService graphDb) {
-        Runtime.getRuntime().addShutdownHook(new Thread(graphDb::shutdown));
-    }
-
     public static void shutdown() {
         db.shutdown();
+    }
+
+    private static void registerShutdownHook(GraphDatabaseService db) {
+        Runtime.getRuntime().addShutdownHook(new Thread(db::shutdown));
     }
 
 }
