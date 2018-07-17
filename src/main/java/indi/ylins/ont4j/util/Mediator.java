@@ -21,28 +21,28 @@ import java.util.stream.Stream;
  */
 public class Mediator {
 
-    private static String owlPath;
-    private static File dbDir;
-    private static OWLOntology ontology;
-    private static OWLReasoner reasoner;
-    private static GraphDatabaseService graphDb;
+    private String owlPath;
+    private File dbDir;
+    private OWLOntology ontology;
+    private OWLReasoner reasoner;
+    private GraphDatabaseService graphDb;
 
-    public static void getEnv(String propertyFile) throws IOException {
-        InputStream in = Mediator.class.getClassLoader().getResourceAsStream(propertyFile);
+    public void getEnv(String propertyFile) throws IOException {
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(propertyFile);
         Properties properties = new Properties();
         properties.load(in);
         owlPath = properties.getProperty("ontPath");
         dbDir = new File(properties.getProperty("dbDir"));
     }
 
-    public static void init() throws OWLOntologyCreationException {
+    public void init() throws OWLOntologyCreationException {
         ontology = Ontology.load(owlPath);
         reasoner = Ontology.createReasoner();
         graphDb = Neo4j.connect(dbDir);
         Neo4j.setConstraint();
     }
 
-    public static void transfer() {
+    public void transfer() {
         try (Transaction tx = graphDb.beginTx()) {
             Node thingNode = Neo4j.getOrCreateNodeWithUniqueFactory("origin", "owl:Thing");
             Stream<OWLClass> classes = ontology.classesInSignature(Imports.INCLUDED);
@@ -52,7 +52,7 @@ public class Mediator {
         }
     }
 
-    public static void close() {
+    public void close() {
         Neo4j.shutdown();
     }
 

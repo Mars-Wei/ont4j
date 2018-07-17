@@ -12,9 +12,10 @@ import java.io.IOException;
 public class Demo {
 
     public static void main(String[] args) throws OWLOntologyCreationException, IOException {
-        Mediator.getEnv("application.properties");
-        Mediator.init();
-        Mediator.transfer();
-        Mediator.close();
+        Mediator mediator = new Mediator();
+        mediator.getEnv("application.properties");
+        mediator.init();
+        mediator.transfer();
+        mediator.close();
     }
 }
